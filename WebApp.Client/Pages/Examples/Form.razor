@@ -1,0 +1,21 @@
+@page "/examples/form/{action}"
+
+<MudGrid Class="justify-center align-center" Style="min-height: 100vh;">
+    <MudItem xs="10" sm="6" md="5" lg="4" xl="3" xxl="2">
+        <MudPaper Class="pa-10 border-gray" Elevation="0">
+            <EditForm EditContext="EditContext" OnSubmit="HandleValidSubmit">
+                <DataAnnotationsValidator />
+
+                <fieldset disabled="@isLoading">
+                    <MudText Class="mb-5" Typo="Typo.h5" Style="text-align: center;">Register</MudText>
+                    <MudTextField Class="mb-3" Variant="Variant.Outlined" @ref="NameRef" @bind-Value="UserModel.Name" For="@(() => UserModel.Name)" Placeholder="Name" Immediate />
+                    <MudTextField Class="mb-3" Variant="Variant.Outlined" @ref="EmailRef" @bind-Value="UserModel.Email" For="@(() => UserModel.Email)" Placeholder="Email" Immediate />
+                    <MudNumericField Class="mb-3" Variant="Variant.Outlined" @ref="AgeRef" @bind-Value="UserModel.Age" For="@(() => UserModel.Age)" Placeholder="Age" Immediate />
+
+                    <MudButton Class="mb-3" Size="Size.Large" FullWidth Variant="Variant.Filled" Color="Color.Primary" ButtonType="ButtonType.Submit">Submit</MudButton>
+                    <MudButton Size="Size.Large" FullWidth Variant="Variant.Filled" Color="Color.Error" ButtonType="ButtonType.Reset">Reset</MudButton>
+                </fieldset>
+            </EditForm>
+        </MudPaper>
+    </MudItem>
+</MudGrid>
