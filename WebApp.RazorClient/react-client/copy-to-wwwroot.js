@@ -4,7 +4,7 @@ const path = require("path");
 
 // Set the directories
 const buildDir = path.join(__dirname, "build"); // The build directory for CRA
-const wwwrootDir = path.join(__dirname, "..", "wwwroot", "react"); // Updated path
+const wwwrootDir = path.join(__dirname, "..", "wwwroot", "react-build"); // Updated path
 
 // Function to build the React app
 const buildReactApp = () => {
@@ -20,13 +20,13 @@ const buildReactApp = () => {
     });
 };
 
-// Function to clean the wwwroot/react directory
+// Function to clean the wwwroot/react-build directory
 const cleanWwwroot = async () => {
     // try {
     //     await fs.emptyDir(wwwrootDir);
-    //     console.log('Cleaned wwwroot/react directory successfully!');
+    //     console.log('Cleaned wwwroot/react-build directory successfully!');
     // } catch (error) {
-    //     console.error('Error cleaning wwwroot/react:', error);
+    //     console.error('Error cleaning wwwroot/react-build:', error);
     // }
 
     try {
@@ -38,19 +38,19 @@ const cleanWwwroot = async () => {
         // Delete each file/directory except asset.json
         await Promise.all(filesToDelete.map((file) => fs.remove(path.join(wwwrootDir, file))));
 
-        console.log("Cleaned wwwroot/react directory successfully, excluding asset.json!");
+        console.log("Cleaned wwwroot/react-build directory successfully, excluding asset.json!");
     } catch (error) {
-        console.error("Error cleaning wwwroot/react:", error);
+        console.error("Error cleaning wwwroot/react-build:", error);
     }
 };
 
-// Function to copy files to wwwroot/react
+// Function to copy files to wwwroot/react-build
 const copyToWwwroot = async () => {
     try {
         await cleanWwwroot(); // Clean the directory first
         await buildReactApp(); // Build the app
         await fs.copy(buildDir, wwwrootDir); // Copy the new files
-        console.log("Files copied to wwwroot/react successfully!");
+        console.log("Files copied to wwwroot/react-build successfully!");
     } catch (error) {
         console.error("Error copying files:", error);
     }

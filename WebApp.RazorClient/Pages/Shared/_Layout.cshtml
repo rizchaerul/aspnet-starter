@@ -32,7 +32,7 @@
 
     string GetReactAssetPath(string ext)
     {
-        var manifestPath = System.IO.Path.Combine("wwwroot", "react", "asset-manifest.json");
+        var manifestPath = System.IO.Path.Combine("wwwroot", "react-build", "asset-manifest.json");
 
         if (!File.Exists(manifestPath))
         {
@@ -44,12 +44,12 @@
         
         if (ext == "js")
         {
-            return manifest != null && manifest.TryGetValue("entrypoints", out var assetPath) ? $"/react/static/js/main.{GetHash(((List<string>)ConvertJsonElementToList((System.Text.Json.JsonElement)assetPath)).Last(), ext)}.js" : string.Empty;
+            return manifest != null && manifest.TryGetValue("entrypoints", out var assetPath) ? $"/react-build/static/js/main.{GetHash(((List<string>)ConvertJsonElementToList((System.Text.Json.JsonElement)assetPath)).Last(), ext)}.js" : string.Empty;
         }
 
         if (ext == "css")
         {
-            return manifest != null && manifest.TryGetValue("entrypoints", out var assetPath) ? $"/react/static/css/main.{GetHash(((List<string>)ConvertJsonElementToList((System.Text.Json.JsonElement)assetPath)).First(), ext)}.css" : string.Empty;
+            return manifest != null && manifest.TryGetValue("entrypoints", out var assetPath) ? $"/react-build/static/css/main.{GetHash(((List<string>)ConvertJsonElementToList((System.Text.Json.JsonElement)assetPath)).First(), ext)}.css" : string.Empty;
         }
 
         return string.Empty;
