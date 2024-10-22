@@ -1,4 +1,62 @@
-﻿<!DOCTYPE html>
+﻿@using System.IO;
+@using System.Text.Json;
+@using System;
+@using System.Collections.Generic;
+
+@{
+    string GetHash(string input, string ext)
+    {
+        var match = System.Text.RegularExpressions.Regex.Match(input, @$"main\.(.*?)\.{ext}");
+        string result = match.Success ? match.Groups[1].Value : null;
+
+        return result ?? string.Empty;
+    }
+
+    List<string> ConvertJsonElementToList(JsonElement jsonElement)
+    {
+        var list = new List<string>();
+
+        if (jsonElement.ValueKind == JsonValueKind.Array)
+        {
+            foreach (var item in jsonElement.EnumerateArray())
+            {
+                if (item.ValueKind == JsonValueKind.String)
+                {
+                    list.Add(item.GetString());
+                }
+            }
+        }
+
+        return list;
+    }
+
+    string GetReactAssetPath(string ext)
+    {
+        var manifestPath = System.IO.Path.Combine("wwwroot", "react", "asset-manifest.json");
+
+        if (!File.Exists(manifestPath))
+        {
+            throw new FileNotFoundException("Manifest file not found.", manifestPath);
+        }
+
+        var json = File.ReadAllText(manifestPath);
+        var manifest = JsonSerializer.Deserialize<Dictionary<string, object>>(json);
+        
+        if (ext == "js")
+        {
+            return manifest != null && manifest.TryGetValue("entrypoints", out var assetPath) ? $"/react/static/js/main.{GetHash(((List<string>)ConvertJsonElementToList((System.Text.Json.JsonElement)assetPath)).Last(), ext)}.js" : string.Empty;
+        }
+
+        if (ext == "css")
+        {
+            return manifest != null && manifest.TryGetValue("entrypoints", out var assetPath) ? $"/react/static/css/main.{GetHash(((List<string>)ConvertJsonElementToList((System.Text.Json.JsonElement)assetPath)).First(), ext)}.css" : string.Empty;
+        }
+
+        return string.Empty;
+    }
+}
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -6,12 +64,15 @@
     <title>@ViewData["Title"] - WebApp.RazorClient</title>
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/WebApp.RazorClient.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="@GetReactAssetPath("css")" />
 </head>
 <body>
+    <div id="react-root"></div>
     @RenderBody()
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="@GetReactAssetPath("js")"></script>
 
     @await RenderSectionAsync("Scripts", required: false)
 </body>
